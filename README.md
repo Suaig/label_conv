@@ -1,0 +1,2 @@
+# label_conv
+用于转换xml的标签文件到txt提供给yolo使用，并支持中文和类别控制
