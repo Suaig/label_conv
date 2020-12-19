@@ -48,12 +48,13 @@ def convert_annotation(xlm_in, txt_out):
                     
                     if cls_name not in copy_class: #不在要转化的列表里
                         continue
-
+                    
                     cls_id = copy_class.index(cls_name)
 
                     b = (bdbox[0], bdbox[2], bdbox[1], bdbox[3]) #xmin,xmax to xmin,ymin
                     bb = convert((w,h), b)
                     out_file.write(str(cls_id) + " " + " ".join([str(a) for a in bb]) + '\n')
+                    copy_class_dict[cls_name] += 1
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
@@ -76,6 +77,8 @@ if __name__ == '__main__':
             for isn in dis_index:
                 copy_class.remove(classes[isn])
             print('class:\n{}'.format(copy_class))
+            
+    copy_class_dict = dict(zip(copy_class, [0]*len(copy_class))) #建立一个字典，后面可以知道转换后的类别的各类数量
 
     #开始遍历xml文件
     files = os.listdir(opt.xml)
@@ -83,3 +86,4 @@ if __name__ == '__main__':
         #转换对应标签写入txt
         convert_annotation(os.path.join(opt.xml, f), os.path.join(opt.txt, f.replace('xml', 'txt')))
     print('converted!')
+    print(copy_class_dict)
